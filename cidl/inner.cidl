@@ -1,0 +1,76 @@
+
+# 获取团购组织
+GET "/inner/agency/organization/info/:organization_id" {
+	
+	Name "InnerAgencyOrganizationInfoByOrganizationID"
+	Type "json"
+	Ack Organization
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 获取可用团购组织
+GET "/inner/agency/organization/enable_info/:organization_id" {
+	
+	Name "InnerAgencyOrganizationEnableInfoByOrganizationID"
+	Type "json"
+	Ack Organization
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 通过uid获取团购组织
+GET "/inner/agency/organization/info_by_user_id/:user_id" {
+	
+	Name "InnerAgencyOrganizationInfoByUserIDByUserID"
+	Type "json"
+	Ack Organization
+	Params {
+		UserID string [ form:"user_id" ]
+	}
+}
+
+
+
+# 获取用户的团购组织成员信息
+GET "/inner/agency/staff/info/:user_id" {
+	
+	Name "InnerAgencyStaffInfoByUserID"
+	Type "json"
+	Ack {
+		
+		# 成员信息
+		Staff        Staff       
+		
+		# 成员角色权限
+		StaffRole    StaffRole   
+		
+		# 组织信息
+		Organization Organization
+	}
+	Params {
+		UserID string [ form:"user_id" ]
+	}
+}
+
+# 是否被禁用 
+GET "/inner/agency/staff/is_disable/:user_id" {
+	
+	Name "InnerAgencyStaffIsDisableByUserID"
+	Type "json"
+	Ack {
+		# 是否被禁用
+		IsDisable bool
+		
+	}
+	Params {
+		UserID string [ form:"user_id" ]
+	}
+}
+

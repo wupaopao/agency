@@ -1,0 +1,499 @@
+
+# 获取团购组织列表
+GET "/agency/admin/organization/list" {
+	
+	Name "AdminOrganizationList"
+	Type "json"
+	Ack {
+		
+		# 总记录数
+		Count uint32             
+		
+		# 组织列表
+		List  array<Organization>
+	}
+	Query {
+		
+		# 页码
+		Page     uint32 [ form:"page"      binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize uint32 [ form:"page_size" binding:"required,gt=0,lt=50" ]
+		
+		# 搜索
+		Search   string [ form:"search"    ]
+	}
+}
+
+
+
+# 获取团购组织详细信息
+GET "/agency/admin/organization/info/:organization_id" {
+	
+	Name "AdminOrganizationInfoByID"
+	Type "json"
+	
+	# 组织
+	Ack {
+		.Organization
+		
+		# 管理员身份证号码
+		ManagerIdCardNumber string
+		
+		# 管理员身份证正面
+		ManagerIdCardFront  string
+		
+		# 管理员身份证背面
+		ManagerIdCardBack   string
+		
+		# 管理员微信昵称
+		ManagerWxNickname   string
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 组织图片
+struct AckPicToken {
+	
+	# 图片文件原名
+	OriginalFileName string
+	
+	# 图片上传TOKEN
+	Token            string
+	
+	# 图片上传KEY
+	Key              string
+	
+	# 图片资源存放位置
+	StoreUrl         string
+	
+	# 图片上传访问链接
+	AccessUrl        string
+}
+
+POST "/agency/admin/organization/add/pic_token" {
+	
+	Name "AdminOrganizationAddPicToken"
+	Type "json"
+	Ask {
+		FileNames array<string>
+	}
+	Ack {
+		Tokens array<AckPicToken>
+	}
+}
+
+
+
+# 添加组织
+POST "/agency/admin/organization/add" {
+	
+	Name "AdminOrganizationAdd"
+	Type "json"
+	Ask {
+		
+		# 步骤一
+		# 手机号
+		ManagerMobile       string                      [ binding:"required,numeric" ]
+		
+		# 管理员昵称
+		ManagerNickname     string                      [ binding:"required,lte=64"  ]
+		
+		# 步骤二
+		# 组织名称
+		Name                string                      [ binding:"required,lte=128" ]
+		
+		# 组织logo
+		Logo                string                      [ binding:"required,lte=255" ]
+		
+		# 公司名称
+		CompanyName         string                      [ binding:"required,lte=128" ]
+		
+		# 银行账号名称
+		BankAccountName     string                      [ binding:"required,lte=64"  ]
+		
+		# 开户银行
+		BankName            string                      [ binding:"required,lte=128" ]
+		
+		# 银行账号
+		BankAccount         string                      [ binding:"required,lte=20"  ]
+		
+		# 所属省份
+		Province            string                      [ binding:"required,lte=40"  ]
+		
+		# 所属城市
+		City                string                      [ binding:"required,lte=40"  ]
+		
+		# 营业执照注册号
+		LicenseNumber       string                      [ binding:"required,lte=20"  ]
+		
+		# 营业执照片
+		LicensePicture      string                      [ binding:"required,lte=255" ]
+		
+		# 联系地址
+		Address             string                      [ binding:"required,lte=255" ]
+		
+		# 邮政编码
+		PostCode            string                      [ binding:"numeric,len=6"    ]
+		
+		# 步骤三
+		# 管理员姓名
+		ManagerName         string                      [ binding:"required,lte=64"  ]
+		
+		# 管理员身份证号
+		ManagerIdCardNumber string                      [ binding:"required,lte=18"  ]
+		
+		# 管理员身份证正面
+		ManagerIdCardFront  string                      [ binding:"required,lte=255" ]
+		
+		# 管理员身份证背面
+		ManagerIdCardBack   string                      [ binding:"required,lte=255" ]
+		
+		# 团购组织模式
+		GroupBuyingMode     OrganizationGroupBuyingMode [ binding:"required"         ]
+	}
+}
+
+
+
+# 编辑组织
+POST "/agency/admin/organization/edit/:organization_id" {
+	
+	Name "AdminOrganizationEditByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 步骤一
+		# 手机号
+		ManagerMobile       string                      [ binding:"required,numeric" ]
+		
+		# 管理员昵称
+		ManagerNickname     string                      [ binding:"required,lte=64"  ]
+		
+		# 步骤二
+		# 组织名称
+		Name                string                      [ binding:"required,lte=128" ]
+		
+		# 组织logo
+		Logo                string                      [ binding:"required,lte=255" ]
+		
+		# 公司名称
+		CompanyName         string                      [ binding:"required,lte=128" ]
+		
+		# 银行账号名称
+		BankAccountName     string                      [ binding:"required,lte=64"  ]
+		
+		# 开户银行
+		BankName            string                      [ binding:"required,lte=128" ]
+		
+		# 银行账号
+		BankAccount         string                      [ binding:"required,lte=20"  ]
+		
+		# 所属省份
+		Province            string                      [ binding:"required,lte=40"  ]
+		
+		# 所属城市
+		City                string                      [ binding:"required,lte=40"  ]
+		
+		# 营业执照注册号
+		LicenseNumber       string                      [ binding:"required,lte=20"  ]
+		
+		# 营业执照片
+		LicensePicture      string                      [ binding:"required,lte=255" ]
+		
+		# 联系地址
+		Address             string                      [ binding:"required,lte=255" ]
+		
+		# 邮政编码
+		PostCode            string                      [ binding:"numeric,len=6"    ]
+		
+		# 步骤三
+		# 管理员姓名
+		ManagerName         string                      [ binding:"required,lte=64"  ]
+		
+		# 管理员身份证号
+		ManagerIdCardNumber string                      [ binding:"required,lte=18"  ]
+		
+		# 管理员身份证正面
+		ManagerIdCardFront  string                      [ binding:"required,lte=255" ]
+		
+		# 管理员身份证背面
+		ManagerIdCardBack   string                      [ binding:"required,lte=255" ]
+		
+		# 团购组织模式
+		GroupBuyingMode     OrganizationGroupBuyingMode [ binding:"required"         ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 禁用组织
+POST "/agency/admin/organization/disable/:organization_id" {
+	
+	Name "AdminOrganizationDisableByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 是否禁用
+		IsDisable bool
+	}
+	Params {
+		OrganizationID string [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 获取可用组织的纪录
+GET "/agency/admin/organization/enable_info/:organization_id" {
+	
+	Name "AdminOrganizationEnableInfoByOrganizationID"
+	Type "json"
+	Ack Organization
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 通过uid获取团购组织id
+GET "/agency/admin/organization/get_organization_id" {
+	
+	Name "AdminOrganizationGetOrganizationID"
+	Type "json"
+	Ack {
+		OrganizationId uint32
+	}
+	Query {
+		UserID string [ form:"uid" binding:"required" ]
+	}
+}
+
+
+
+# 团购成员角色权限列表
+GET "/agency/admin/role/list/:organization_id" {
+	
+	Name "AdminRoleListByOrganizationID"
+	Type "json"
+	Ack {
+		
+		# 总记录数目
+		Count uint32          
+		
+		# 成员列表
+		List  array<StaffRole>
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+	Query {
+		
+		# 页码
+		Page     uint32 [ form:"page"      binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize uint32 [ form:"page_size" binding:"required,gt=0,lt=50" ]
+	}
+}
+
+
+
+# 获取团购成员列表
+GET "/agency/admin/staff/list/:organization_id" {
+	
+	Name "AdminStaffListByOrganizationID"
+	Type "json"
+	Ack {
+		
+		# 总数
+		Count uint32      
+		
+		# 成员
+		List  array<Staff>
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+	Query {
+		
+		# 页码
+		Page     uint32 [ form:"page"      binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize uint32 [ form:"page_size" binding:"required,gt=0,lt=50" ]
+	}
+}
+
+
+
+# 添加团购组织成员
+POST "/agency/admin/staff/add/:organization_id" {
+	
+	Name "AdminStaffAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 成员姓名
+		Name   string [ binding:"required,lte=64"  ]
+		
+		# 成员手机
+		Mobile string [ binding:"required,numeric" ]
+		
+		# 角色ID
+		RoleId uint32 [ binding:"required,gt=0"    ]
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 编辑团购组织成员
+POST "/agency/admin/staff/edit/:organization_id/:user_id" {
+	
+	Name "AdminStaffEditByOrganizationIDByUserID"
+	Type "json"
+	Ask {
+		
+		# 成员姓名
+		Name   string [ binding:"required,lte=64"  ]
+		
+		# 成员手机
+		Mobile string [ binding:"required,numeric" ]
+		
+		# 角色ID
+		RoleId uint32 [ binding:"required,gt=0"    ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		UserID         string [ form:"user_id"         binding:"required"      ]
+	}
+}
+
+
+
+# 禁用团购组织成员
+POST "/agency/admin/staff/disable/:organization_id/:user_id" {
+	
+	Name "AdminStaffDisableByOrganizationIDByUserID"
+	Type "json"
+	Ask {
+		
+		# 是否禁用
+		IsDisable bool
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		UserID         string [ form:"user_id"         binding:"required"      ]
+	}
+}
+
+
+
+# 权限列表
+GET "/agency/admin/authorization/list" {
+	
+	Name "AdminAuthorizationList"
+	Type "json"
+	Ack {
+		
+		# 模块权限列表
+		Modules array<StaffRoleAuthorizationGroup>
+	}
+}
+
+
+
+# 获取角色
+GET "/agency/admin/role/get/:organization_id/:role_id" {
+	
+	Name "AdminRoleGetByOrganizationIDByRoleID"
+	Type "json"
+	Ack {
+		StaffRole StaffRole                         
+		Modules   array<StaffRoleAuthorizationGroup>
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		RoleID         uint32 [ form:"role_id"         binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 添加角色
+POST "/agency/admin/role/add/:organization_id" {
+	
+	Name "AdminRoleAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 角色名称
+		RoleName         string        [ binding:"required,lte=64" ]
+		
+		# 权限ID数组
+		AuthorizationIds array<uint32> [ binding:"required,gt=0"   ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 编辑角色
+POST "/agency/admin/role/edit/:organization_id/:role_id" {
+	
+	Name "AdminRoleEditByOrganizationIDByRoleID"
+	Type "json"
+	Ask {
+		
+		# 角色名称
+		RoleName         string        [ binding:"required,lte=64" ]
+		
+		# 权限ID数组
+		AuthorizationIds array<uint32> [ binding:"required,gt=0"   ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		RoleID         uint32 [ form:"role_id"         binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 禁用角色
+POST "/agency/admin/role/disable/:organization_id/:role_id" {
+	
+	Name "AdminRoleDisableByOrganizationIDByRoleID"
+	Type "json"
+	Ask {
+		
+		# 是否禁用
+		IsDisable bool
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		RoleID         uint32 [ form:"role_id"         binding:"required,gt=0" ]
+	}
+}
+
+

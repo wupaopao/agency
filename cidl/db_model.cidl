@@ -1,0 +1,153 @@
+enum StaffRoleType { 
+	StaffRoleTypeSuperAdministrator 1
+	StaffRoleTypeCommon             2
+}
+
+
+# 团购组织成员角色
+struct StaffRole {
+	
+	# 角色ID
+	RoleId            uint32               [ db:"rol_id"        ]
+	
+	# 组织ID
+	OrganizationId    uint32               [ db:"org_id"        ]
+	
+	# 角色名称
+	RoleName          string               [ db:"name"          ]
+	
+	# 角色权限数据
+	RoleAuthorization RoleAuthorizationMap [ db:"authorization" ]
+	
+	# 是否被禁用
+	IsDisable         bool                 [ db:"is_disable"    ]
+	
+	# 成员角色类型
+	Type              StaffRoleType        [ db:"type"          ]
+	
+	# 版本
+	Version           uint32               [ db:"version"       ]
+}
+
+
+# 团购组织成员
+struct Staff {
+	
+	# 用户ID
+	UserId           string   [ db:"uid"         ]
+	
+	# 组织ID
+	OrganizationId   uint32   [ db:"org_id"      ]
+	
+	# 组织名称
+	OrganizationName string   [ db:"org_name"    ]
+	
+	# 名称
+	Name             string   [ db:"name"        ]
+	
+	# 手机号
+	Mobile           string   [ db:"mobile"      ]
+	
+	# 角色ID
+	RoleId           uint32   [ db:"rol_id"      ]
+	
+	# 角色名称
+	RoleName         string   [ db:"rol_name"    ]
+	
+	# 是否被禁用
+	IsDisable        bool     [ db:"is_disable"  ]
+	
+	# 创建时间
+	CreateTime       datetime [ db:"create_time" ]
+}
+
+
+# 组织信息完善状态
+enum OrganizationPerfectionState { 
+	
+	# 默认
+	OrganizationPerfectionStateDefault      0
+	
+	# 已完善资料
+	OrganizationPerfectionStateComplete     1
+	
+	# 需完善资料
+	OrganizationPerfectionStateNeedComplete 2
+}
+
+
+# 团购模式
+enum OrganizationGroupBuyingMode { 
+	
+	# 报单模式
+	OrganizationGroupBuyingModeReport 1
+	
+	# 下单模式
+	OrganizationGroupBuyingModeOrder  2
+}
+
+
+# 团购组织
+struct Organization {
+	
+	# 组织ID
+	OrganizationId  uint32                      [ db:"org_id"            ]
+	
+	# 组织名称
+	Name            string                      [ db:"name"              ]
+	
+	# 组织logo
+	Logo            string                      [ db:"logo"              ]
+	
+	# 组织所在省份
+	Province        string                      [ db:"province"          ]
+	
+	# 组织所在城市
+	City            string                      [ db:"city"              ]
+	
+	# 地址
+	Address         string                      [ db:"address"           ]
+	
+	# 邮政编码
+	PostCode        string                      [ db:"post_code"         ]
+	
+	# 银行名称
+	BankName        string                      [ db:"bank_name"         ]
+	
+	# 银行账号
+	BankAccount     string                      [ db:"bank_account"      ]
+	
+	# 银行账户名称
+	BankAccountName string                      [ db:"bank_account_name" ]
+	
+	# 公司名称
+	CompanyName     string                      [ db:"company_name"      ]
+	
+	# 营业执照
+	LicenseNumber   string                      [ db:"license_number"    ]
+	
+	# 营业执照图片
+	LicensePicture  string                      [ db:"license_picture"   ]
+	
+	# 管理员用户ID
+	ManagerUserId   string                      [ db:"manager_uid"       ]
+	
+	# 管理员名称
+	ManagerName     string                      [ db:"manager_name"      ]
+	
+	# 管理员手机
+	ManagerMobile   string                      [ db:"manager_mobile"    ]
+	
+	# 团购模式
+	GroupBuyingMode OrganizationGroupBuyingMode [ db:"group_buying_mode" ]
+	
+	# 资料完善状态
+	PerfectionState OrganizationPerfectionState [ db:"perfection_state"  ]
+	
+	# 是否被禁用
+	IsDisable       bool                        [ db:"is_disable"        ]
+	
+	# 创建时间
+	CreateTime      datetime                    [ db:"create_time"       ]
+}
+

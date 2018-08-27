@@ -1,0 +1,304 @@
+
+# 获取团购组织列表
+GET "/agency/org/organization/list" {
+	
+	Name "OrgOrganizationList"
+	Type "json"
+	Ack {
+		
+		# 总记录数
+		Count uint32             
+		
+		# 组织列表
+		List  array<Organization>
+	}
+	Query {
+		
+		# 页码
+		Page     uint32 [ form:"page"      binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize uint32 [ form:"page_size" binding:"required,gt=0,lt=50" ]
+		
+		# 搜索
+		Search   string [ form:"search"    ]
+	}
+}
+
+
+
+# 获取团购组织详细信息
+GET "/agency/org/organization/info/:organization_id" {
+	
+	Name "OrgOrganizationInfoByID"
+	Type "json"
+	
+	# 组织
+	Ack {
+		.Organization
+		
+		# 管理员身份证号码
+		ManagerIdCardNumber string
+		
+		# 管理员身份证正面
+		ManagerIdCardFront  string
+		
+		# 管理员身份证背面
+		ManagerIdCardBack   string
+		
+		# 管理员微信昵称
+		ManagerWxNickname   string
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 获取可用组织的纪录
+GET "/agency/org/organization/enable_info/:organization_id" {
+	
+	Name "OrgOrganizationEnableInfoByOrganizationID"
+	Type "json"
+	Ack Organization
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 通过uid获取团购组织id
+GET "/agency/org/organization/get_organization_id" {
+	
+	Name "OrgOrganizationGetOrganizationID"
+	Type "json"
+	Ack {
+		OrganizationId uint32
+	}
+	Query {
+		UserID string [ form:"uid" binding:"required" ]
+	}
+}
+
+
+
+# 团购成员角色权限列表
+GET "/agency/org/role/list/:organization_id" {
+	
+	Name "OrgRoleListByOrganizationID"
+	Type "json"
+	Ack {
+		
+		# 总记录数目
+		Count uint32          
+		
+		# 成员列表
+		List  array<StaffRole>
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+	Query {
+		
+		# 页码
+		Page     uint32 [ form:"page"      binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize uint32 [ form:"page_size" binding:"required,gt=0,lt=50" ]
+	}
+}
+
+
+
+# 获取团购成员列表
+GET "/agency/org/staff/list/:organization_id" {
+	
+	Name "OrgStaffListByOrganizationID"
+	Type "json"
+	Ack {
+		
+		# 总数
+		Count uint32      
+		
+		# 成员
+		List  array<Staff>
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+	Query {
+		
+		# 页码
+		Page     uint32 [ form:"page"      binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize uint32 [ form:"page_size" binding:"required,gt=0,lt=50" ]
+	}
+}
+
+
+
+# 添加团购组织成员
+POST "/agency/org/staff/add/:organization_id" {
+	
+	Name "OrgStaffAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 成员姓名
+		Name   string [ binding:"required,lte=64"  ]
+		
+		# 成员手机
+		Mobile string [ binding:"required,numeric" ]
+		
+		# 角色ID
+		RoleId uint32 [ binding:"required,gt=0"    ]
+	}
+	Params {
+		
+		# 组织ID
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 编辑团购组织成员
+POST "/agency/org/staff/edit/:organization_id/:user_id" {
+	
+	Name "OrgStaffEditByOrganizationIDByUserID"
+	Type "json"
+	Ask {
+		
+		# 成员姓名
+		Name   string [ binding:"required,lte=64"  ]
+		
+		# 成员手机
+		Mobile string [ binding:"required,numeric" ]
+		
+		# 角色ID
+		RoleId uint32 [ binding:"required,gt=0"    ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		UserID         string [ form:"user_id"         binding:"required"      ]
+	}
+}
+
+
+
+# 禁用团购组织成员
+POST "/agency/org/staff/disable/:organization_id/:user_id" {
+	
+	Name "OrgStaffDisableByOrganizationIDByUserID"
+	Type "json"
+	Ask {
+		
+		# 是否禁用
+		IsDisable bool
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		UserID         string [ form:"user_id"         binding:"required"      ]
+	}
+}
+
+
+
+# 权限列表
+GET "/agency/org/authorization/list" {
+	
+	Name "OrgAuthorizationList"
+	Type "json"
+	Ack {
+		
+		# 模块权限列表
+		Modules array<StaffRoleAuthorizationGroup>
+	}
+}
+
+
+
+# 获取角色
+GET "/agency/org/role/get/:organization_id/:role_id" {
+	
+	Name "OrgRoleGetByOrganizationIDByRoleID"
+	Type "json"
+	Ack {
+		StaffRole StaffRole                         
+		Modules   array<StaffRoleAuthorizationGroup>
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		RoleID         uint32 [ form:"role_id"         binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 添加角色
+POST "/agency/org/role/add/:organization_id" {
+	
+	Name "OrgRoleAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 角色名称
+		RoleName         string        [ binding:"required,lte=64" ]
+		
+		# 权限ID数组
+		AuthorizationIds array<uint32> [ binding:"required,gt=0"   ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 编辑角色
+POST "/agency/org/role/edit/:organization_id/:role_id" {
+	
+	Name "OrgRoleEditByOrganizationIDByRoleID"
+	Type "json"
+	Ask {
+		
+		# 角色名称
+		RoleName         string        [ binding:"required,lte=64" ]
+		
+		# 权限ID数组
+		AuthorizationIds array<uint32> [ binding:"required,gt=0"   ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		RoleID         uint32 [ form:"role_id"         binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 禁用角色
+POST "/agency/org/role/disable/:organization_id/:role_id" {
+	
+	Name "OrgRoleDisableByOrganizationIDByRoleID"
+	Type "json"
+	Ask {
+		
+		# 是否禁用
+		IsDisable bool
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		RoleID         uint32 [ form:"role_id"         binding:"required,gt=0" ]
+	}
+}
+
+

@@ -1,0 +1,4 @@
+errors {
+	ErrAddSuperAdministratorIsForbidden 4000 "不允许添加超级管理员权限角色"  
+}
+

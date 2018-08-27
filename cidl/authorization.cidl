@@ -1,0 +1,72 @@
+
+# 权限
+struct Authorization {
+	
+	# 权限ID
+	AuthorizationId AuthorizationId
+	
+	# 权限标题
+	Title           string         
+	
+	# 父权限ID
+	ParentId        AuthorizationId
+	
+	# 父权限标题
+	ParentTitle     string         
+}
+
+
+# 成员管理板块权限ID
+enum AuthorizationId { 
+	
+	# 超级管理员
+	SuperAdministratorAuthorizationId     1   
+	
+	# （组）团购组织管理（成员管理）
+	OrganizationManagementAuthorizationId 1000
+	
+	# 查看成员
+	ShowStaffAuthorizationId              1001
+	
+	# 编辑成员
+	EditStaffAuthorizationId              1002
+	
+	# 查看角色
+	ShowStaffRoleAuthorizationId          1003
+	
+	# 编辑角色
+	EditStaffRoleAuthorizationId          1004
+	
+	# （组）社群管理
+	CommunityManagementAuthorizationId    2000
+	
+	# 查看社群
+	ShowGroupAuthorizationId              2001
+	
+	# 编辑社群
+	EditGroupAuthorizationId              2002
+	
+	# （组）团购任务管理
+	GroupBuyingManagementAuthorizationId  3000
+	
+	# 查看团购任务
+	ShowTaskAuthorizationId               3001
+	
+	# 编辑团购任务
+	EditTaskAuthorizationId               3002
+}
+
+
+# 组织成员权限
+struct StaffRoleAuthorization {
+	.Authorization
+	IsOwn bool
+}
+
+
+# 成员组
+struct StaffRoleAuthorizationGroup {
+	ModuleAuthorization StaffRoleAuthorization                     
+	SubAuthorizations   map<AuthorizationId,StaffRoleAuthorization>
+}
+

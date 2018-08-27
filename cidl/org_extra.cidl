@@ -1,0 +1,23 @@
+
+# 添加或者编辑组织成员时，检查新手机是否已经绑定其他用户
+GET "/agency/org/staff/check_new_mobile/:mobile" {
+	
+	Name "OrgStaffCheckNewMobileByMobile"
+	Type "json"
+	Ack {
+		
+		# 是否允许被绑定。如果CanBeBound=true，则此手机允许被绑定为组织成员
+		CanBeBound  bool  
+		
+		# 用户记录是否已经存在。
+		IsUserExist bool  
+		
+		# 用户名称。如果IsUserExist=false，UserName=""
+		UserName    string
+	}
+	Params {
+		Mobile string [ form:"mobile" binding:"required,numeric" ]
+	}
+}
+
+
