@@ -428,6 +428,16 @@ func (m *OrgStaffDisableByOrganizationIDByUserIDImpl) Handler(ctx *http.Context)
 		return
 	}
 
+	askDisable := &user.AskInnerUserSetIsDisableByUserID{
+                UserType:   user.OrgStaff,
+                IsDisable: m.Ask.IsDisable,
+        }
+	_, err = user.NewProxy("user-service").InnerUserSetIsDisableByUserID(m.Params.UserID, askDisable)
+	if err != nil {
+		ctx.Errorf(api.ErrProxyFailed, "set is_disable by user_id failed. %s", err)
+		return
+	}
+
 	ctx.Succeed()
 }
 
